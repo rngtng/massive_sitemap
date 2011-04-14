@@ -282,6 +282,8 @@ class BigSitemap
     elsif options[:geo]
       options[:filename] << '_kml'
       GeoBuilder.new(options)
+    elsif options[:mobile]
+      MobileBuilder.new(options)
     else
       Builder.new(options)
     end

@@ -294,6 +294,26 @@ class BigSitemapTest < Test::Unit::TestCase
     end
   end
 
+  context 'mobile' do
+    should 'include mobile namespace' do
+      create_sitemap(:gzip => false)
+      add_model(:path => 'foo', :mobile => true)
+      @sitemap.generate
+
+      f = File.open(unzipped_first_sitemaps_model_file)
+      f.first #read next line
+      assert f.first.include?( ns['mobile'])
+    end
+
+    should 'include mobile tag' do
+      create_sitemap(:gzip => false)
+      add_model(:path => 'foo', :mobile => true)
+      @sitemap.generate
+
+      assert_equal 10, mobile_elements(unzipped_first_sitemaps_model_file, 'mobile').size
+    end
+  end
+
   context 'partial update' do
 
     context 'prepare_update' do
@@ -534,13 +554,18 @@ class BigSitemapTest < Test::Unit::TestCase
     end
 
     def ns
-      {'s' => 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+      {'s' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+       'mobile' => 'http://www.google.com/schemas/sitemap-mobile/1.0'}
     end
 
-    def elements(filename, el)
+    def elements(filename, el, nsp = 's')
       file_class = filename.include?('.gz') ? Zlib::GzipReader : File
       data = Nokogiri::XML.parse(file_class.open(filename).read)
-      data.search("//s:#{el}", ns)
+      data.search("//#{nsp}:#{el}", ns)
+    end
+
+    def mobile_elements(filename, el)
+      elements(filename, el, nsp = 'mobile')
     end
 
     def num_elements(filename, el)

@@ -103,6 +103,15 @@ Alternatively, you can pass a lambda.  For example, to make use of your Rails ro
     :location => lambda { |post| post_url(post) }
   )
 
+=== Mobile Sitemap support
+
+To create a mobile Sitemap for a model, just pass <code>:mobile => true</code>
+
+  sitemap.add(Post,
+    :location => lambda { |post| post_url(post) },
+    :mobile => true
+  )
+
 === Change Frequency, Priority and Last Modified
 
 You can control "changefreq", "priority" and "lastmod" values for each record individually by passing lambdas instead of fixed values:

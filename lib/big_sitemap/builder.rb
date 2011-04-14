@@ -158,7 +158,17 @@ class BigSitemap
       _url_tag('sitemap', :loc => url, :lastmod => time)
     end
   end
+
+  class MobileBuilder < Builder
+
+    def _init_document(name = 'urlset', attrs = HEADER_ATTRIBUTES)
+      super(name, attrs.merge('xmlns:mobile' => "http://www.google.com/schemas/sitemap-mobile/1.0"))
     end
+
+    def add_url!(url, time = nil, frequency = nil, priority = nil, part_nr = nil, extras = {})
+      super(url, time, frequency, priority, part_nr, extras.merge('mobile:mobile' => ""))
+    end
+
   end
 
   class GeoBuilder < Builder
