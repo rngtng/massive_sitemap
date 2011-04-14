@@ -248,11 +248,12 @@ class BigSitemapTest < Test::Unit::TestCase
     should 'generate for all xml files in directory' do
       create_sitemap
       @sitemap.clean
-      File.open("#{sitemaps_dir}/sitemap_file1.xml", 'w')
-      File.open("#{sitemaps_dir}/sitemap_file2.xml.gz", 'w')
-      File.open("#{sitemaps_dir}/sitemap_file3.txt", 'w')
-      File.open("#{sitemaps_dir}/file4.xml", 'w')
-      File.open(unzipped_sitemaps_index_file, 'w')
+      create_files(
+        "#{sitemaps_dir}/sitemap_file1.xml",
+        "#{sitemaps_dir}/sitemap_file2.xml.gz",
+        "#{sitemaps_dir}/sitemap_file3.txt",
+        "#{sitemaps_dir}/file4.xml",
+        unzipped_sitemaps_index_file)
       @sitemap.send :generate_sitemap_index
 
       elem = elements(sitemaps_index_file, 'loc')
@@ -264,9 +265,8 @@ class BigSitemapTest < Test::Unit::TestCase
     should 'generate for all for given file' do
       create_sitemap
       @sitemap.clean
-      File.open("#{sitemaps_dir}/sitemap_file1.xml", 'w')
-      File.open("#{sitemaps_dir}/sitemap_file2.xml.gz", 'w')
       files = ["#{sitemaps_dir}/sitemap_file1.xml", "#{sitemaps_dir}/sitemap_file2.xml.gz"]
+      create_files *files
       @sitemap.send :generate_sitemap_index, files
 
       elem = elements(sitemaps_index_file, 'loc')
@@ -280,10 +280,10 @@ class BigSitemapTest < Test::Unit::TestCase
     should 'return last id' do
       create_sitemap.clean
       filename = "#{sitemaps_dir}/sitemap_file"
-      File.open("#{filename}_1.xml", 'w')
-      File.open("#{filename}_23.xml", 'w')
-      File.open("#{filename}_42.xml.gz", 'w')
-      File.open("#{filename}_9.xml", 'w')
+      create_files("#{filename}_1.xml",
+                   "#{filename}_23.xml",
+                   "#{filename}_42.xml.gz",
+                   "#{filename}_9.xml")
       assert_equal 42, @sitemap.send(:get_last_id, filename)
     end
 
@@ -303,10 +303,10 @@ class BigSitemapTest < Test::Unit::TestCase
         create_sitemap(:partial_update => true).clean
         add_model(:num_items => 50) #TestModel
 
-        File.open("#{filename}_23.xml", 'w')
+        create_files "#{filename}_23.xml"
         assert_equal "(id >= 23)", @sitemap.send(:prepare_update).first.last[:conditions]
 
-        File.open("#{filename}_42.xml", 'w')
+        create_files "#{filename}_42.xml"
         assert_equal "(id >= 23) AND (id >= 42)", @sitemap.send(:prepare_update).first.last[:conditions]
       end
 
@@ -316,7 +316,7 @@ class BigSitemapTest < Test::Unit::TestCase
         create_sitemap(:partial_update => true).clean
         add_model(:num_items => 50, :primary_column => 'name') #TestModel
 
-        File.open("#{filename}_666.xml", 'w')
+        create_files "#{filename}_666.xml"
         assert_equal "(name >= 666)", @sitemap.send(:prepare_update).first.last[:conditions]
       end
     end
@@ -328,11 +328,11 @@ class BigSitemapTest < Test::Unit::TestCase
       create_sitemap(:partial_update => true, :gzip => false, :batch_size => 5, :max_per_sitemap => 5, :max_per_index => 100).clean
       add_model(:num_items => 50 - last_id) #TestModel
 
-      File.open("#{filename}.xml", 'w')
-      File.open("#{filename}_5.xml", 'w')
-      File.open("#{filename}_9.xml", 'w')
-      File.open("#{filename}_23.xml", 'w')
-      File.open("#{filename}_#{last_id}.xml", 'w')
+      create_files("#{filename}.xml",
+                   "#{filename}_5.xml",
+                   "#{filename}_9.xml",
+                   "#{filename}_23.xml",
+                   "#{filename}_#{last_id}.xml")
       @sitemap.generate
 
       # Dir["#{sitemaps_dir}/*"].each do |d| puts d; end
@@ -449,6 +449,12 @@ class BigSitemapTest < Test::Unit::TestCase
   private
     def delete_tmp_files
       FileUtils.rm_rf(sitemaps_dir)
+    end
+
+    def create_files(*files)
+      files.each do |filename|
+        File.open(filename, 'w')
+      end
     end
 
     def create_sitemap(options={})
