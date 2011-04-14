@@ -102,16 +102,18 @@ class BigSitemap
       @opened_tags << name
     end
 
-    def _start_tag(name, attrs = {})
+    def _start_tag(name, attrs = {}, single = false)
       attrs = attrs.map { |attr,value| %Q( #{attr}="#{value}") }.join('')
-      target!.print "<#{name}#{attrs}>"
+      target!.print "<#{name}#{attrs}#{'/' if single}>"
     end
 
     def tag!(name, content, attrs = {})
       _indent
-      _start_tag(name, attrs)
-      target!.print content.to_s.gsub('&', '&amp;')
-      _end_tag(name)
+      _start_tag(name, attrs, content == "")
+      if content != ""
+        target!.print content.to_s.gsub('&', '&amp;')
+        _end_tag(name)
+      end
       _newline
     end
 
@@ -147,7 +149,7 @@ class BigSitemap
 
   class IndexBuilder < Builder
     def _init_document(name = 'sitemapindex', attrs = {'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9'})
-      attrs.merge('xmlns:geo' => "http://www.google.com/geo/schemas/sitemap/1.0")
+      #attrs.merge('xmlns:geo' => "http://www.google.com/geo/schemas/sitemap/1.0")
       super(name, attrs)
     end
 
