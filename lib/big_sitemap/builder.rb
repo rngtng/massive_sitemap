@@ -7,7 +7,7 @@ class BigSitemap
     HEADER_ATTRIBUTES = {
       'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
       'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-      'xsi:schemaLocation' => "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" 
+      'xsi:schemaLocation' => "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
     }
 
     def initialize(options)
@@ -28,15 +28,11 @@ class BigSitemap
       _init_document
     end
 
-    def add_url!(url, time = nil, frequency = nil, priority = nil, part_nr = nil)
+    def add_url!(url, time = nil, frequency = nil, priority = nil, part_nr = nil, extras = {})
       _rotate(part_nr) if @max_urls == @urls
 
-      _open_tag 'url'
-      tag! 'loc', url
-      tag! 'lastmod', time.utc.strftime('%Y-%m-%dT%H:%M:%S+00:00') if time
-      tag! 'changefreq', frequency if frequency
-      tag! 'priority', priority if priority
-      _close_tag 'url'
+      time = time.utc.strftime('%Y-%m-%dT%H:%M:%S+00:00') if time
+      _url_tag('url', extras.merge(:loc => url, :lastmod => time, :changefreq => frequency, :priority => priority))
 
       @urls += 1
     end
@@ -79,6 +75,14 @@ class BigSitemap
       target!.print '<?xml version="1.0" encoding="UTF-8"?>'
       _newline
       _open_tag name, attrs
+    end
+
+    def _url_tag(name, values = {})
+      _open_tag name
+      values.each do |key, value|
+        tag! key, value if value
+      end
+      _close_tag name
     end
 
     def _rotate(part_nr = nil)
@@ -148,10 +152,10 @@ class BigSitemap
     end
 
     def add_url!(url, time = nil)
-      _open_tag 'sitemap'
-      tag! 'loc', url
-      tag! 'lastmod', time.utc.strftime('%Y-%m-%dT%H:%M:%S+00:00') if time
-      _close_tag 'sitemap'
+      time = time.utc.strftime('%Y-%m-%dT%H:%M:%S+00:00') if time
+      _url_tag('sitemap', :loc => url, :lastmod => time)
+    end
+  end
     end
   end
 
