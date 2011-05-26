@@ -38,6 +38,7 @@ class BigSitemap
       raise ArgumentError, 'you must specify either ":url_options" hash or ":base_url" string'
     end
     @options[:url_path] ||= @options[:document_path]
+    @options[:url_path]   = File.join(@options[:base_url], @options[:url_path]) unless @options[:url_path].include?('http')
 
     if @options[:batch_size] > @options[:max_per_sitemap]
       raise ArgumentError, '":batch_size" must be less than ":max_per_sitemap"'
@@ -318,7 +319,7 @@ class BigSitemap
   end
 
   def url_for_sitemap(path)
-    File.join @options[:base_url], @options[:url_path], File.basename(path)
+    File.join @options[:url_path], File.basename(path)
   end
 
 end
