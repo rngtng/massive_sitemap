@@ -1,3 +1,8 @@
+=== 0.8.3.1 / 2011-05-26
+
+* added support for absolute :url_path
+* added first basic mobile sitemap support
+
 === 0.8.3 / 2011-03-08
 
 * Separate URL and file paths are now supported via the :document_path
