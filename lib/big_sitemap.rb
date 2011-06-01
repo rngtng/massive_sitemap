@@ -218,11 +218,12 @@ class BigSitemap
     self
   end
 
-  def ping_search_engines
+  def ping_search_engines(index_file)
     require 'net/http'
     require 'cgi'
 
-    sitemap_uri = CGI::escape(url_for_sitemap(@sitemap_files.last))
+    index_file ||= @sitemap_files.last
+    sitemap_uri = CGI::escape(url_for_sitemap(index_file))
 
     if @options[:ping_google]
       Net::HTTP.get('www.google.com', "/webmasters/tools/ping?sitemap=#{sitemap_uri}")

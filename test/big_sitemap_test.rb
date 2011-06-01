@@ -59,6 +59,21 @@ class BigSitemapTest < Test::Unit::TestCase
     assert File.exists?(first_sitemaps_model_file), "#{first_sitemaps_model_file} exists"
     assert File.exists?(second_sitemaps_model_file), "#{second_sitemaps_model_file} exists"
   end
+  should 'generate with absolute url_path' do
+    url = 'http://example.com'
+    url_path = 'http://external.com'
+
+    options = {:document_root => tmp_dir, :document_path => 'sitemaps', :url_path => url_path}
+    @sitemap = BigSitemap.new(options.merge(:url_options => {:host => 'example.com'}))
+
+    add_model(:path => 'foo')
+    @sitemap.generate
+
+    assert_equal 1, num_elements(sitemaps_index_file, 'sitemapindex')
+    assert_equal 1, num_elements(sitemaps_index_file, 'lastmod')
+    
+    assert Zlib::GzipReader.open(sitemaps_index_file).read.include?("http://external.com")
+  end
 
   context 'Sitemap index file' do
     should 'contain one sitemapindex element' do
