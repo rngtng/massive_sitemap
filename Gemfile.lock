@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    big_sitemap (0.8.3.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -11,6 +16,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  big_sitemap!
+  bundler
   mocha
   nokogiri
   shoulda

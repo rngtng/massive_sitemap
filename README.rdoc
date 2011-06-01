@@ -172,7 +172,7 @@ Thanks also to those who have contributed patches:
 * Mislav Marohnić
 * Jeff Schoolcraft
 * Dalibor Nasevic
-* Tobias Bielohlawek (http://www.rngtng.com)
+* Tobias Bielohlawek, SoundCloud Ltd. {http://www.rngtng.com}[http://www.rngtng.com]
 
 == Copyright
 

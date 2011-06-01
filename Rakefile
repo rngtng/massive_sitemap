@@ -1,27 +1,11 @@
-require 'rake'
+require 'bundler/gem_tasks'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name = "big_sitemap"
-    s.summary = %Q{A Sitemap generator specifically designed for large sites (although it works equally well with small sites)}
-    s.email = %w(alexrabarts@gmail.com tobi@soundcloud.com)
-    s.homepage = "http://github.com/alexrabarts/big_sitemap"
-    s.description = "A Sitemap generator specifically designed for large sites (although it works equally well with small sites)"
-    s.authors = ["Alex Rabarts", "Tobias Bielohlawek"]
-    s.add_dependency 'bundler'
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
-end
-
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = 'big_sitemap'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+require 'rdoc/task'
+RDoc::Task.new do |rd|
+  rd.main = "README.rdoc"
+  rd.title = 'big_sitemap'
+  rd.options << '--line-numbers' << '--inline-source'
+  rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
 end
 
 require 'rake/testtask'
