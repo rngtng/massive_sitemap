@@ -134,7 +134,7 @@ class BigSitemap
         end
         
         # Keep the initial conditions for later use
-        conditions = find_options[:conditions].clone
+        conditions = find_options[:conditions]
 
         primary_column   = options.delete(:primary_column)
 
