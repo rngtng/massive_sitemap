@@ -2,6 +2,7 @@ source :rubygems
 
 gem 'rake'
 gem 'rdoc'
+gem 'massive_sitemap'
 
 group :development do
   gem 'jeweler'

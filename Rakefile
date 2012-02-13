@@ -31,4 +31,5 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
+task :spec => :test
 task :default => :test
