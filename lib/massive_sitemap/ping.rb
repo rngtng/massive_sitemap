@@ -16,7 +16,10 @@ module MassiveSitemap
 
     Array(engines).each do |engine|
       if engine_url = ENGINES_URLS[engine]
-        open(engine_url % url)
+        begin
+          open(engine_url % url)
+        rescue SocketError
+        end
       end
     end
   end

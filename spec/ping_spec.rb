@@ -27,6 +27,12 @@ describe MassiveSitemap do
           MassiveSitemap.ping(url, :unknown)
         end.to_not raise_error
       end
+
+      it "doesn't fail when it can't talk to an engine" do
+        MassiveSitemap.should_receive(:open).twice.and_raise(SocketError)
+
+        MassiveSitemap.ping(url, [:google, :ask])
+      end
     end
   end
 end
