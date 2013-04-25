@@ -30,7 +30,7 @@ module MassiveSitemap
         ::File.dirname(tmp_filename).tap do |dir|
           FileUtils.mkdir_p(dir) unless ::File.exists?(dir)
         end
-        ::File.open(tmp_filename, 'w')
+        ::File.open(tmp_filename, 'wb')
       end
 
       def close_stream(file)
